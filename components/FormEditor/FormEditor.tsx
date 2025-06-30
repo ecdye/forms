@@ -61,7 +61,7 @@ export default function FormEditor({ initialForm, onSave }: Props) {
           <PageEditor
             key={page.id}
             page={page}
-            allPageIds={form.pages.map((p) => p.id)}
+            allPages={form.pages}
             onChange={(updatedPage: FormPage) => updatePage(idx, updatedPage)}
           />
           <TouchableOpacity

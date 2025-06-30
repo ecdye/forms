@@ -7,11 +7,11 @@ import QuestionEditor from './QuestionEditor';
 
 type Props = {
   page: FormPage;
-  allPageIds: string[];
+  allPages: FormPage[];
   onChange: (page: FormPage) => void;
 };
 
-export default function PageEditor({ page, allPageIds, onChange }: Props) {
+export default function PageEditor({ page, allPages, onChange }: Props) {
   const removeQuestion = (index: number) => {
     const updated = page.questions.filter((_, i) => i !== index);
     onChange({ ...page, questions: updated });
@@ -46,7 +46,8 @@ export default function PageEditor({ page, allPageIds, onChange }: Props) {
           <QuestionEditor
             key={q.id}
             question={q}
-            allPageIds={allPageIds}
+            allPageIds={allPages.map((p) => p.id)}
+            allPageTitles={allPages.map((p) => p.title)}
             onChange={(newQ: FormQuestion) => updateQuestion(idx, newQ)}
           />
           <TouchableOpacity

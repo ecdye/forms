@@ -9,12 +9,13 @@ import ConditionalEditor from './ConditionalEditor';
 type Props = {
   question: FormQuestion;
   allPageIds: string[];
+  allPageTitles: string[];
   onChange: (question: FormQuestion) => void;
 };
 
 const QUESTION_TYPES = ['text', 'number', 'select', 'checkbox', 'radio'] as const;
 
-export default function QuestionEditor({ question, allPageIds, onChange }: Props) {
+export default function QuestionEditor({ question, allPageIds, allPageTitles, onChange }: Props) {
   const updateField = (key: keyof FormQuestion, value: any) => {
     onChange({ ...question, [key]: value });
   };
@@ -92,6 +93,12 @@ export default function QuestionEditor({ question, allPageIds, onChange }: Props
       <ConditionalEditor
         value={question.next}
         pageIds={allPageIds}
+        pageTitles={allPageTitles}
+        optionsForCondition={
+          ['select', 'checkbox', 'radio'].includes(question.type)
+            ? question.options
+            : undefined
+        }
         onChange={(next: ConditionalNext) => onChange({ ...question, next })}
       />
     </View>
