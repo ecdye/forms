@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, ScrollView } from 'react-native';
 import { FormDefinition, FormPage } from '../../models/formTypes';
+import { TouchableOpacity } from 'react-native';
+import { X } from 'lucide-react-native';
 import PageEditor from './PageEditor';
 
 type Props = {
@@ -17,6 +19,11 @@ export default function FormEditor({ initialForm, onSave }: Props) {
       pages: [],
     }
   );
+
+  const removePage = (index: number) => {
+    const updated = form.pages.filter((_, i) => i !== index);
+    setForm({ ...form, pages: updated });
+  };
 
   const addPage = () => {
     const newPage: FormPage = {
@@ -50,11 +57,20 @@ export default function FormEditor({ initialForm, onSave }: Props) {
       />
 
       {form.pages.map((page, idx) => (
-        <PageEditor
-          key={page.id}
-          page={page}
-          onChange={(updatedPage: FormPage) => updatePage(idx, updatedPage)}
-        />
+        <View className="relative">
+          <PageEditor
+            key={page.id}
+            page={page}
+            allPageIds={form.pages.map((p) => p.id)}
+            onChange={(updatedPage: FormPage) => updatePage(idx, updatedPage)}
+          />
+          <TouchableOpacity
+            onPress={() => removePage(idx)}
+            className="absolute top-2 right-2 bg-red-600 p-1 rounded-full z-10"
+          >
+            <X size={18} color="white" />
+          </TouchableOpacity>
+        </View>
       ))}
 
       <Button title="Add Page" onPress={addPage} />
