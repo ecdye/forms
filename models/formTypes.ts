@@ -24,10 +24,12 @@ export type FormQuestion = {
 export type ConditionalNext =
   | { type: 'static'; targetPageId: string }
   | {
-    type: 'conditional';
-    conditions: Array<{
-      value: string | number;
-      targetPageId: string;
-    }>;
-    defaultTarget?: string;
-  };
+      type: 'conditional';
+      conditions: Array<{
+        value: string | number;
+        targetPageId?: string;
+        actionType: 'jump' | 'notify';
+        notifyPerson?: string;
+      }>;
+      defaultTarget?: string;
+    };

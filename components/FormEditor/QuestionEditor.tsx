@@ -99,7 +99,7 @@ export default function QuestionEditor({ question, allPageIds, allPageTitles, on
             ? question.options
             : undefined
         }
-        onChange={(next: ConditionalNext) => onChange({ ...question, next })}
+        onChange={(next: ConditionalNext | undefined) => onChange({ ...question, next })}
       />
     </View>
   );

@@ -23,16 +23,19 @@ export default function ConditionalEditor({
     const next: ConditionalNext = value?.type === 'conditional'
       ? {
         ...value,
-        conditions: [...value.conditions, { value: '', targetPageId: pageIds[0] }],
+        conditions: [
+          ...value.conditions,
+          { value: '', targetPageId: pageIds[0], actionType: 'jump' },
+        ],
       }
       : {
         type: 'conditional',
-        conditions: [{ value: '', targetPageId: pageIds[0] }],
+        conditions: [{ value: '', targetPageId: pageIds[0], actionType: 'jump' }],
       };
     onChange(next);
   };
 
-  const handleChangeCondition = (index: number, field: 'value' | 'targetPageId', newVal: string | number) => {
+  const handleChangeCondition = (index: number, field: 'value' | 'targetPageId' | 'actionType' | 'notifyPerson', newVal: string | number) => {
     if (!value || value.type !== 'conditional') return;
 
     const updated = [...value.conditions];
@@ -58,7 +61,7 @@ export default function ConditionalEditor({
 
   return (
     <View className="my-2 p-2 border rounded">
-      <Text className="font-bold mb-2">Conditional Jump Logic</Text>
+      <Text className="font-bold mb-2">Conditional Logic</Text>
 
       {value?.type === 'conditional' &&
         value.conditions.map((cond, idx) => (
@@ -89,19 +92,50 @@ export default function ConditionalEditor({
               />
             )}
 
-            <Text className="text-sm font-semibold mb-1">Jump to Page:</Text>
-            <View className="border rounded bg-white">
+            <Text className="text-sm font-semibold mb-1">Action:</Text>
+            <View className="border rounded bg-white mb-2">
               <Picker
-                selectedValue={cond.targetPageId}
+                selectedValue={cond.actionType}
                 onValueChange={(val) =>
-                  handleChangeCondition(idx, 'targetPageId', val)
+                  handleChangeCondition(idx, 'actionType', val)
                 }
               >
-                {pageIds.map((id, i) => (
-                  <Picker.Item key={id} label={pageTitles[i]} value={id} />
-                ))}
+                <Picker.Item label="Jump to Page" value="jump" />
+                <Picker.Item label="Notify Person" value="notify" />
               </Picker>
             </View>
+
+            {cond.actionType === 'jump' && (
+              <>
+                <Text className="text-sm font-semibold mb-1">Jump to Page:</Text>
+                <View className="border rounded bg-white mb-2">
+                  <Picker
+                    selectedValue={cond.targetPageId}
+                    onValueChange={(val) =>
+                      handleChangeCondition(idx, 'targetPageId', val)
+                    }
+                  >
+                    {pageIds.map((id, i) => (
+                      <Picker.Item key={id} label={pageTitles[i]} value={id} />
+                    ))}
+                  </Picker>
+                </View>
+              </>
+            )}
+
+            {cond.actionType === 'notify' && (
+              <>
+                <Text className="text-sm font-semibold mb-1">Notify Person:</Text>
+                <TextInput
+                  className="border p-2 rounded mb-2"
+                  placeholder="Enter person to notify"
+                  value={cond.notifyPerson}
+                  onChangeText={(text) =>
+                    handleChangeCondition(idx, 'notifyPerson', text)
+                  }
+                />
+              </>
+            )}
 
             <TouchableOpacity
               onPress={() => handleRemoveCondition(idx)}
