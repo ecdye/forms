@@ -73,9 +73,13 @@ export default function FormEditor({ initialForm, onSave }: Props) {
         </View>
       ))}
 
-      <Button title="Add Page" onPress={addPage} />
-      <View className="mt-4">
-        <Button title="Save Form" onPress={() => onSave(form)} />
+      <View className="flex flex-row justify-between">
+        <TouchableOpacity onPress={addPage} className='justify-begin mr-2 px-5 py-2.5 rounded-md bg-blue-500 shadow-md hover:bg-blue-600 cursor-pointer align-center'>
+          <Text className='text-white text-center text-l'>Add Page</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => onSave(form)} className='justify-end mr-2 px-5 py-2.5 rounded-md bg-blue-500 shadow-md hover:bg-blue-600 cursor-pointer align-center'>
+          <Text className='text-white text-center text-l'>Save Form</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

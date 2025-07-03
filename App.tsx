@@ -1,10 +1,10 @@
 import "./global.css"
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { FormDefinition } from './models/formTypes';
 import FormEditor from './components/FormEditor/FormEditor';
+import FormList from './components/FormList/FormList';
 import { getAllForms, saveForm, deleteForm } from './storage/formStorage';
-import { X } from 'lucide-react-native';
 
 export default function App() {
   const [forms, setForms] = useState<FormDefinition[]>([]);
@@ -30,47 +30,35 @@ export default function App() {
     await loadForms();
   };
 
-  if (editingForm) {
-    return (
-      <FormEditor
-        initialForm={editingForm}
-        onSave={handleSave}
-      />
-    );
-  }
-
   return (
-    <View className="p-4">
-      <Text className="text-xl font-bold mb-4">Your Saved Forms</Text>
+    <View className="min-w-full flex flex-row">
+      <View className="w-1/6 p-4 border-r bg-gray-800">
+        <Text className="text-xl text-white font-bold mb-4">Saved Forms</Text>
 
-      <FlatList
-        data={forms}
-        keyExtractor={(f) => f.id}
-        renderItem={({ item }) => (
-          <View className="flex-row justify-between items-center mb-2 border-b pb-2 pr-6">
-            <TouchableOpacity onPress={() => setEditingForm(item)}>
-              <Text className="text-lg">{item.title || '(Untitled Form)'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => handleDelete(item.id)}
-              className="absolute top-1 right-0 bg-red-500 p-1 rounded-full"
-            >
-              <X size={14} color="white" />
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+        <FormList forms={forms} onEdit={setEditingForm} onDelete={handleDelete} />
 
-      <Button
-        title="Create New Form"
-        onPress={() =>
-          setEditingForm({
-            id: Date.now().toString(),
-            title: '',
-            pages: [],
-          })
-        }
-      />
+        <TouchableOpacity
+          onPress={() => {
+            setEditingForm({
+              id: Date.now().toString(),
+              title: '',
+              pages: [],
+            });
+          }}
+          className="mr-2 px-5 py-2.5 rounded-md bg-blue-500 shadow-md hover:bg-blue-600 cursor-pointer align-center"
+        >
+          <Text className="text-white text-center text-l">Create New Form</Text>
+        </TouchableOpacity>
+      </View>
+
+      {editingForm && (
+        <View className="flex-1">
+          <FormEditor
+            initialForm={editingForm}
+            onSave={handleSave}
+          />
+        </View>
+      )}
     </View>
   );
 }
